@@ -28,8 +28,6 @@ void Server::Mode(Client &client){
 	std::cout << "tmp.size = " << vector_size << std::endl;
 	////wtf size e todo burro
 	if (vector_size == 0){
-		std::cout << "aqui!\n";
-		send_to_server(":" + client.get_nickname() + " MODE " + tmp_channel->get_name() + " " + tmp_channel->get_current_modes(), client);
 		return;
 	}
 	Mode_parser(tmp, *tmp_channel, client);
@@ -114,6 +112,7 @@ void Server::Mode_exec(bool set_remove, char flag, std::string parameters, chann
 		channel.set_remove_op(client.get_fd(), set_remove);
 	}
 	if (flag == 'l'){
+		std::string tmp = "l";
 		if (set_remove == true){
 			int limit = get_num(parameters);
 			if (limit < 0 || limit > 9999){
