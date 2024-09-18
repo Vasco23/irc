@@ -56,6 +56,7 @@ class Server
 		void send_to_server(std::string str, Client &client);
 		void send_to_channel(std::string str, Client &client, channel &channel);
 		void send_to_all_channel(std::string str, channel &channel);
+		void send_to_all(std::string str);
 
 		////////commands////////
 		void find_command(int i);

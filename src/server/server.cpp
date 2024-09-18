@@ -19,7 +19,7 @@ int Server::create_server(){
 	if (socket_fd == -1)
 		return 1;
 	hint.sin_family = AF_INET;
-	hint.sin_port = htons(6969);
+	hint.sin_port = htons(atoi(ip.c_str()));
 	inet_pton(AF_INET, ip.c_str(), &hint.sin_addr);
 	if (bind(socket_fd, (const sockaddr*)&hint, sizeof(hint)) == -1){
 		std::cout << "error in binding\n";
@@ -43,6 +43,7 @@ int Server::client_joined(){
 	clients.push_back(tmp);
 	struct pollfd client_pollfd;
 	client_pollfd.fd = new_client_fd;
+	tmp->set_ip(inet_ntoa(new_client.sin_addr));
 	client_pollfd.events = POLLIN;
 	poll_fds[poll_num] = client_pollfd;
 	poll_num++;
@@ -157,6 +158,16 @@ void Server::send_to_all_channel(std::string str, channel &channel){
 		//send((*it).first->get_fd(), str.c_str(), str.length(), 0);
 	}
 }
+
+void Server::send_to_all(std::string str){
+	std::vector<Client *>::iterator it = clients.begin();
+	for (; it != clients.end(); it++){
+		std::cout << (*it)->get_fd() << std::endl;
+		send_to_server(str, *(*it));
+		//send((*it).first->get_fd(), str.c_str(), str.length(), 0);
+	}
+}
+
 
 bool Server::is_client_on_server(std::string str){
 	std::vector<Client *>::iterator it = clients.begin();

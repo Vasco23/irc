@@ -75,6 +75,10 @@ std::string Client::get_input(){
 	return this->input;
 }
 
+std::string Client::get_ip(){
+	return this->ip;
+}
+
 
 
 ////////////////////////set///////////////////////////////
@@ -107,6 +111,10 @@ void Client::set_parsed_input(std::string message){
 		token.clear();
 		tmp.clear();
     }
+}
+
+void Client::set_ip(std::string _ip){
+	this->ip = _ip;
 }
 
 void Client::set_parsed_input_clear(){

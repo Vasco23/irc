@@ -42,7 +42,7 @@ void Server::nick_helper(Client &client, std::string str){
 	else{
 		std::string last_nickname = client.get_nickname();
 		client.set_nickname(str);
-		send_to_server(":" + last_nickname + " NICK " + str, client);
+		send_to_all(":" + last_nickname + "!" + client.get_username() + "@" + client.get_ip() + " NICK :" + str);
 	}	
 }
  

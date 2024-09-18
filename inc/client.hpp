@@ -15,6 +15,7 @@ class Client
 		std::string	realname;
 		std::string input;
 		std::vector<std::vector<std::string> > parsed_input;
+		std::string ip;
 		bool		valid_pass;
 		bool		nickname_seted;
 		bool		username_seted;
@@ -38,6 +39,7 @@ class Client
 		std::string get_username();
 		std::string get_realname();
 		std::string get_input();
+		std::string get_ip();
 		
 
 		///set///
@@ -52,6 +54,7 @@ class Client
 		void set_username(std::string user);
 		void set_realname(std::string real);
 		void set_input(std::string input);
+		void set_ip(std::string ip);	
 
 		//////prints//////
 		void print_parsed_input();
