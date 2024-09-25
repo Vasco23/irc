@@ -4,6 +4,13 @@ Client::Client(sockaddr_in _addr, socklen_t _addr_size, int _fd) : addr(_addr), 
 	name = "";
 	nickname = "";
 	username = "";
+	realname = "";
+	input = "";
+	valid_pass = false;
+	nickname_seted = false;
+	username_seted = false;
+	client_registerd = false;
+	badBehavior = 0;
 }
 
 Client::~Client(){
@@ -77,6 +84,10 @@ std::string Client::get_input(){
 
 std::string Client::get_ip(){
 	return this->ip;
+}
+
+int Client::getBadBehavior(){
+	return this->badBehavior;
 }
 
 
@@ -154,6 +165,10 @@ void Client::set_realname(std::string real){
 
 void Client::set_input(std::string _input){
 	this->input += _input;
+}
+
+void Client::incrementBadBehavior(){
+	this->badBehavior++;
 }
 
 ////////////////////////////////////////
