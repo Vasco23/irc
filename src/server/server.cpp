@@ -18,6 +18,7 @@ int Server::create_server(){
 	}
 	if (socket_fd == -1)
 		return 1;
+	hint.sin_addr.s_addr = inet_addr("127.0.0.1");
 	hint.sin_family = AF_INET;
 	hint.sin_port = htons(atoi(ip.c_str()));
 	inet_pton(AF_INET, ip.c_str(), &hint.sin_addr);
@@ -45,6 +46,7 @@ int Server::client_joined(){
 	client_pollfd.fd = new_client_fd;
 	tmp->set_ip(inet_ntoa(new_client.sin_addr));
 	client_pollfd.events = POLLIN;
+	client_pollfd.revents = 0;
 	poll_fds[poll_num] = client_pollfd;
 	poll_num++;
 	return 0;
