@@ -15,7 +15,9 @@
 #include <unistd.h>
 #include <sys/epoll.h>
 #include <string.h>
+#include <fstream>
 #include "defines.hpp"
+#include "Bot.hpp"
 //#include "channel.hpp"
 
 /* #include "client.hpp" */
@@ -70,6 +72,7 @@ class Server
 		void Kick(Client &Client);
 		void Invite(Client &Client);
 		void Mode(Client &Client);
+		void Quit(Client &Client);
 
 		typedef void(Server::*f)(Client &Client);
 

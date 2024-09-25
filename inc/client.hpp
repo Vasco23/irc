@@ -3,6 +3,7 @@
 
 #include "server.hpp"
 #include "channel.hpp"
+#include "Bot.hpp"
 
 class Client
 {
@@ -21,6 +22,7 @@ class Client
 		bool		username_seted;
 		bool		client_registerd;
 		int			fd;
+		int			badBehavior;
 
 	public:
 		Client(sockaddr_in _addr, socklen_t _addr_size, int _fd);
@@ -40,6 +42,8 @@ class Client
 		std::string get_realname();
 		std::string get_input();
 		std::string get_ip();
+		void incrementBadBehavior();
+		int getBadBehavior();
 		
 
 		///set///
