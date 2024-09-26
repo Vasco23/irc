@@ -14,10 +14,13 @@
 #include <poll.h>
 #include <unistd.h>
 #include <sys/epoll.h>
+#include <cstddef>
 #include <string.h>
 #include <fstream>
 #include "defines.hpp"
 #include "Bot.hpp"
+#include <csignal>
+
 //#include "channel.hpp"
 
 /* #include "client.hpp" */
@@ -90,6 +93,9 @@ class Server
 		void	join_helper(Client &client, channel &channel);
 		void	Mode_parser(std::vector<std::string> flags, channel &channel, Client &client);
 		void	Mode_exec(bool set_remove, char flag, std::string parameters, channel &channel, Client &client);
+		static void    signal_handler(int signum);
+		static void    ignoreSignal(int signum);
+		void    registerSignal();
 };
 
 int check_names(std::string str);
