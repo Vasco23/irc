@@ -64,10 +64,12 @@ void Server::read_from_client(int i, std::string buffer){
 	clients.at(i - 1)->set_input(buffer);
 	if ((it = buffer.find("\r\n")) != (int)std::string::npos){
 		parser_comand(i - 1, clients.at(i - 1)->get_input());
+		if ((int)clients.size() <= i - 1){
+			return;
+		}
 		clients.at(i - 1)->set_input_clear();
 		clients.at(i - 1)->set_parsed_input_clear();
 	}
-	
 }
 
 void Server::server_loop(){
@@ -92,17 +94,8 @@ void Server::server_loop(){
 				else {
 					char buffer[1024] = {0};
 					int valread = recv(poll_fds[i].fd, buffer, 1024, 0);
-					/* if (buffer)
-						std::cout << buffer << std::endl; */
-					if (valread == 0) {
-						std::cout << "Client disconnected, socket fd is " << poll_fds[i].fd << std::endl;
-						close(poll_fds[i].fd);
-						update_poll_fds(i);
-						--i;
-					} 
-					else {
+					if (valread > 0)
 						read_from_client(i, buffer);
-					}
                 }
             }
         }
