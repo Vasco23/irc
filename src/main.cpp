@@ -1,11 +1,20 @@
 #include "../inc/server.hpp"
 
+bool running = true;
+
+static bool isNumber(std::string str){
+	for (int i = 0; i < (int)str.length(); i++){
+		if (!isdigit(str[i]))
+			return false;
+	}
+	return true;
+}
+
 static bool checkInput(std::string input){
-	if(atoi(input.c_str()) >= 1024 && atoi(input.c_str()) <= 65535)
+	if(isNumber(input) && (atoi(input.c_str()) >= 1024 && atoi(input.c_str()) <= 65535))
 		return true;
 	return false;
 }
-
 
 int main(int ac, char **av){
 	if (ac != 3)
