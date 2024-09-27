@@ -2,6 +2,8 @@
 #include "../../inc/client.hpp"
 #include "../../inc/channel.hpp"
 
+static Server* instance = NULL;
+
 Server::Server(std::string _ip, std::string _pass) : ip(_ip), pass(_pass){
 	poll_num = 0;
 }
@@ -28,6 +30,7 @@ int Server::create_server(){
 	}
 	if (listen(socket_fd, SOMAXCONN) == -1)
 		return 1;
+	registerSignal();
 	server_loop();
 	close(socket_fd);
 	return 0;
@@ -70,6 +73,36 @@ void Server::read_from_client(int i, std::string buffer){
 		clients.at(i - 1)->set_input_clear();
 		clients.at(i - 1)->set_parsed_input_clear();
 	}
+
+}
+
+void Server::signal_handler(int signal) {
+    if (signal == SIGINT && instance != NULL) {
+        std::cout << "Recebido SIGINT (Ctrl-C). Fechando o servidor com segurança..." << std::endl;
+        
+        // Acessar a instância atual do servidor
+        for (std::vector<Client*>::iterator it = instance->clients.begin(); it != instance->clients.end(); ++it) {
+            close((*it)->get_fd());
+            delete *it;  // Desalocar os clientes
+        }
+        instance->clients.clear();
+
+        close(instance->socket_fd);
+
+        exit(0);  // Terminar o programa
+    }
+}
+
+void Server::ignoreSignal(int signal) {
+    if (signal == SIGQUIT) {
+        std::cout << "Sinal SIGQUIT ignorado (Ctrl-D)." << std::endl;
+    }
+}
+
+
+void Server::registerSignal(){
+	signal(SIGINT, Server::signal_handler);
+	signal(SIGQUIT, Server::ignoreSignal);
 }
 
 void Server::server_loop(){
@@ -125,14 +158,11 @@ void Server::find_command(int i){
 		j = 0;
 	}
 }
-
 /*
 	
 	
 
 */
-
-
 
 /////send stuff back////
 void Server::send_to_server(std::string str, Client &client){

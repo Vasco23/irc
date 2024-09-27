@@ -11,7 +11,7 @@ class Bot{
     private:
     public:
         bool verifyMessage(std::string message, Client &client, channel &channel, Server &server);
-        // void kickUser(Client &client);
+        void kickUser(Client &client, channel &channel, Server &server);
 };
 
 
