@@ -38,6 +38,7 @@ class Server
 		sockaddr_in hint;
 		std::vector<Client *> clients;
 		std::vector<channel *> channels;
+		static bool running;
 
 		////// events ////////
 		/* std::vector<struct pollfd> poll_fds; */

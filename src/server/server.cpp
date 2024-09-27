@@ -2,10 +2,11 @@
 #include "../../inc/client.hpp"
 #include "../../inc/channel.hpp"
 
-static Server* instance = NULL;
+// static Server* instance = NULL;
 
 Server::Server(std::string _ip, std::string _pass) : ip(_ip), pass(_pass){
 	poll_num = 0;
+
 }
 
 Server::~Server(){
@@ -32,6 +33,7 @@ int Server::create_server(){
 		return 1;
 	registerSignal();
 	server_loop();
+	
 	close(socket_fd);
 	return 0;
 }
@@ -77,19 +79,9 @@ void Server::read_from_client(int i, std::string buffer){
 }
 
 void Server::signal_handler(int signal) {
-    if (signal == SIGINT && instance != NULL) {
+    if (signal == SIGINT) {
         std::cout << "Recebido SIGINT (Ctrl-C). Fechando o servidor com segurança..." << std::endl;
-        
-        // Acessar a instância atual do servidor
-        for (std::vector<Client*>::iterator it = instance->clients.begin(); it != instance->clients.end(); ++it) {
-            close((*it)->get_fd());
-            delete *it;  // Desalocar os clientes
-        }
-        instance->clients.clear();
 
-        close(instance->socket_fd);
-
-        exit(0);  // Terminar o programa
     }
 }
 
@@ -102,7 +94,7 @@ void Server::ignoreSignal(int signal) {
 
 void Server::registerSignal(){
 	signal(SIGINT, Server::signal_handler);
-	// signal(SIGQUIT, Server::ignoreSignal);
+	signal(SIGQUIT, Server::ignoreSignal);
 }
 
 void Server::server_loop(){
