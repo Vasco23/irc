@@ -2,7 +2,7 @@ NAME = irc
 SRC_NAME = main.cpp ./server/server.cpp ./server/clients.cpp ./server/channel.cpp\
 			./server/commands/pass.cpp ./server/commands/nick.cpp ./server/commands/join.cpp ./server/commands/user.cpp ./server/commands/part.cpp \
 			./server/commands/privmsg.cpp ./server/commands/topic.cpp ./server/commands/kick.cpp ./server/commands/invite.cpp ./server/commands/mode.cpp\
-			./server/commands/quit.cpp ./server/bot.cpp
+			./server/commands/quit.cpp ./server/commands/who.cpp ./server/bot.cpp
 
 CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -g -std=c++98 #-fsanitize=address

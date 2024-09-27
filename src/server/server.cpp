@@ -111,12 +111,12 @@ void Server::parser_comand(int i, std::string str){
 void Server::find_command(int i){
 	int j = 0;
 	Client *tmp = clients.at(i);
-	std::string commads[11] = {"PASS", "NICK", "USER", "JOIN", "PART", "PRIVMSG", "TOPIC", "KICK", "INVITE", "MODE", "QUIT"};
-	f func[11] = {&Server::Pass, &Server::Nick, &Server::User, &Server::Join, &Server::Part, &Server::Privmsg, &Server::Topic, &Server::Kick, &Server::Invite, &Server::Mode, &Server::Quit};
+	std::string commads[12] = {"PASS", "NICK", "USER", "JOIN", "PART", "PRIVMSG", "TOPIC", "KICK", "INVITE", "MODE", "QUIT", "WHO"};
+	f func[12] = {&Server::Pass, &Server::Nick, &Server::User, &Server::Join, &Server::Part, &Server::Privmsg, &Server::Topic, &Server::Kick, &Server::Invite, &Server::Mode, &Server::Quit, &Server::Who};
 	std::vector<std::vector<std::string> > copy = clients.at(i)->get_parsed_input();
 	std::vector<std::vector<std::string> >::iterator it = copy.begin();
 	for (; it != copy.end(); it++){
-		while (j < 11){
+		while (j < 12){
 			if ((*it).front().compare(commads[j]) == 0)
 				(this->*(func[j]))(*tmp);
 			j++;

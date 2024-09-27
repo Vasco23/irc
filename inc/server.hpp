@@ -73,6 +73,7 @@ class Server
 		void Invite(Client &Client);
 		void Mode(Client &Client);
 		void Quit(Client &Client);
+		void Who(Client &Client);
 
 		typedef void(Server::*f)(Client &Client);
 

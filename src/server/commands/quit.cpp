@@ -2,8 +2,27 @@
 
 void Server::Quit(Client &client){
     std::cout << client.get_fd() << " entrei QUIT\n";
+   std::vector<channel *>::iterator it = channels.begin();
+    while(it != channels.end()){
+        if (is_client_on_channel(client, (**it))){
+            if ((**it).get_num_of_ops() == 1){
+                if (is_client_op(client, (**it))){
+                    if ((**it).get_clients().size() == 1){
+                        (**it).remove_client(&client);
+                        channels.erase(it);
+                        continue;
+                    }
+                    (**it).get_clients().front().second = true;
+                }
+            }
+            (**it).remove_client(&client);
+        }
+        else{
+            it++;
+        }
+    }
     std::vector<Client *>::iterator it2 = clients.begin();
-    int i = 0;
+    int i = 1;
     while(it2 != clients.end()){
         if (client.get_fd() == (*it2)->get_fd()){
             clients.erase(it2);
