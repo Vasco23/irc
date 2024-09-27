@@ -97,8 +97,8 @@ class Server
 		static void    signal_handler(int signum);
 		static void    ignoreSignal(int signum);
 		void    registerSignal();
+		int check_names(std::string str);
 };
 
-int check_names(std::string str);
 
 #endif

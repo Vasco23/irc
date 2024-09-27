@@ -10,23 +10,21 @@ void Server::Nick(Client &client){
 		send_to_server(ERR_NOTREGISTERED, client);
 		return;
 	}
-	if (tmp.front().compare("NICK") == 0){
-		if (tmp.size() == 2 && tmp.back().compare(client.get_nickname()) == 0){
-			send_to_server(ERR_NICKNAMEINUSE, client);
-		}
-		else if (tmp.size() == 2){
-			if (check_names(tmp.back()) == 1 || tmp.back().size() > 8){
-				send_to_server(ERR_ERRONEUSNICKNAME, client);
-			}
-			else{
-				nick_helper(client, tmp.back());
-			}
-		}
-		else if (tmp.size() == 1)
-			send_to_server(ERR_NEEDMOREPARAMS, client);
-		else if (tmp.size() > 2){
+	if (tmp.size() == 2 && tmp.back().compare(client.get_nickname()) == 0){
+		send_to_server(ERR_NICKNAMEINUSE, client);
+	}
+	else if (tmp.size() == 2){
+		if (check_names(tmp.back()) == 1 || tmp.back().size() > 8){
 			send_to_server(ERR_ERRONEUSNICKNAME, client);
 		}
+		else{
+			nick_helper(client, tmp.back());
+		}
+	}
+	else if (tmp.size() == 1)
+		send_to_server(ERR_NEEDMOREPARAMS, client);
+	else if (tmp.size() > 2){
+		send_to_server(ERR_ERRONEUSNICKNAME, client);
 	}
 }
 
@@ -49,8 +47,13 @@ void Server::nick_helper(Client &client, std::string str){
 	}	
 }
  
-int check_names(std::string str){
+int Server::check_names(std::string str){
 	std::string::iterator it = str.begin();
+	std::vector<Client *>::iterator it2 = clients.begin();
+	for (; it2 != clients.end(); it2++){
+		if (str == (*it2)->get_nickname())
+			return 1;
+	}
 	for (; it != str.end(); it++){
 		if (((*it) >= '0' && (*it) <= '9') || ((*it) >= 'a' && (*it) <= 'z') || ((*it) >= 'A' && (*it) <= 'Z'))
 			continue;
