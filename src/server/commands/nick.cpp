@@ -14,9 +14,8 @@ void Server::Nick(Client &client){
 		if (tmp.size() == 2 && tmp.back().compare(client.get_nickname()) == 0){
 			send_to_server(ERR_NICKNAMEINUSE, client);
 		}
-		else if (tmp.size() == 2 && tmp.back().compare(client.get_nickname()) != 0){
+		else if (tmp.size() == 2){
 			if (check_names(tmp.back()) == 1 || tmp.back().size() > 8){
-
 				send_to_server(ERR_ERRONEUSNICKNAME, client);
 			}
 			else{
@@ -36,8 +35,12 @@ void Server::nick_helper(Client &client, std::string str){
 	if (client.get_nickname_seted() == false){
 		client.set_nickname(str);
 		client.set_nickname_seted(true);
-		if (client.get_username_seted() == true)
+		std::cout << "set valid" << std::endl;
+		if (client.get_username_seted() == true){
+
 			send_to_server("001 :Welcome to the Internet Relay Network " + client.get_nickname() + "!" + client.get_username() + "@" + this->ip, client);
+			client.set_client_registerd(true);
+		}
 	}
 	else{
 		std::string last_nickname = client.get_nickname();

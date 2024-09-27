@@ -116,7 +116,7 @@ void Server::Mode_exec(bool set_remove, char flag, std::string parameters, chann
 		if (set_remove == true){
 			int limit = get_num(parameters);
 			if (limit < 0 || limit > 9999){
-				std::string msg = "472 " + flag;
+				std::string msg = "472 " + static_cast<std::string>(&flag);
 				send_to_server(msg + " :Thats a stupid parameter right there!", client);
 			}
 			else

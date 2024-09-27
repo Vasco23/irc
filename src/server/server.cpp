@@ -65,7 +65,7 @@ void Server::update_poll_fds(int i){
 void Server::read_from_client(int i, std::string buffer){
 	int it;
 	clients.at(i - 1)->set_input(buffer);
-	if ((it = buffer.find("\r\n")) != (int)std::string::npos){
+	if ((it = buffer.find("\r\n")) != (int)std::string::npos || (it = buffer.find("\n")) != (int)std::string::npos){
 		parser_comand(i - 1, clients.at(i - 1)->get_input());
 		if ((int)clients.size() <= i - 1){
 			return;
@@ -102,7 +102,7 @@ void Server::ignoreSignal(int signal) {
 
 void Server::registerSignal(){
 	signal(SIGINT, Server::signal_handler);
-	signal(SIGQUIT, Server::ignoreSignal);
+	// signal(SIGQUIT, Server::ignoreSignal);
 }
 
 void Server::server_loop(){
@@ -117,7 +117,7 @@ void Server::server_loop(){
             exit(EXIT_FAILURE);
         }
 		for (int i = 0; i < poll_num; i++) {
-            if (poll_fds[i].revents && (POLLIN)) {
+            if (poll_fds[i].revents && POLLIN) {
                 if (poll_fds[i].fd == socket_fd) {
 					std::cout << "///////// ENTREI AQUI FDS\n";
                     if (client_joined() == 0){

@@ -110,7 +110,7 @@ void Client::set_parsed_input(std::string message){
 			begin = last + 1;
 		}
         token2 = token.substr(begin);
-		size_t end1 = token2.find_first_of("\r\n", 0);
+		size_t end1 = token2.find_first_of("\n", 0);
 		token2 = token2.substr(0, end1);
 		if (token2.empty() == false){
 			tmp.push_back(token2);
