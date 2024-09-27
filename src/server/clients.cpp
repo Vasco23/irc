@@ -101,8 +101,17 @@ void Client::set_parsed_input(std::string message){
     size_t start = 0, end = 0;
 	size_t begin = 0, last = 0;
 	//int i = 0;
-    while ((end = message.find('\n', start)) != std::string::npos) {
+
+	// Replace all occurrences of \r\n with \n
+	size_t pos = 0;
+    while ((pos = message.find("\r\n", pos)) != std::string::npos) {
+        message.replace(pos, 2, "\n");
+        pos += 1;
+    }
+
+    while ((end = message.find("\n", start)) != std::string::npos) {
         token = message.substr(start, end - start);
+		if (end -1 )
 		while ((last = token.find(' ', begin)) != std::string::npos){
 			token2 = token.substr(begin, last - begin);
 			tmp.push_back(token2);
