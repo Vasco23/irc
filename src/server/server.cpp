@@ -2,7 +2,7 @@
 #include "../../inc/client.hpp"
 #include "../../inc/channel.hpp"
 
-// static Server* instance = NULL;
+bool server_on = true;
 
 Server::Server(std::string _ip, std::string _pass) : ip(_ip), pass(_pass){
 	poll_num = 0;
@@ -10,6 +10,7 @@ Server::Server(std::string _ip, std::string _pass) : ip(_ip), pass(_pass){
 }
 
 Server::~Server(){
+	delete this;
 }
 
 int Server::create_server(){
@@ -33,6 +34,7 @@ int Server::create_server(){
 		return 1;
 	registerSignal();
 	server_loop();
+	clean_server();
 	
 	close(socket_fd);
 	return 0;
@@ -81,7 +83,7 @@ void Server::read_from_client(int i, std::string buffer){
 void Server::signal_handler(int signal) {
     if (signal == SIGINT) {
         std::cout << "Recebido SIGINT (Ctrl-C). Fechando o servidor com segurança..." << std::endl;
-
+		server_on = false;
     }
 }
 
@@ -102,7 +104,7 @@ void Server::server_loop(){
     server_pollfd.events = POLLIN; 
     poll_fds[poll_num] = server_pollfd;
 	poll_num++;
-	while (true){
+	while (server_on){
 		int poll_count = poll(poll_fds, poll_num , -1);
 		if (poll_count < 0) {
             ////close func here ->
@@ -150,11 +152,19 @@ void Server::find_command(int i){
 		j = 0;
 	}
 }
-/*
-	
-	
 
-*/
+void Server::clean_server(){
+	std::vector<Client *>::iterator it = clients.begin();
+	std::vector<channel *>::iterator it2 = channels.begin();
+	for (; it != clients.end();){
+		delete *it;
+		clients.erase(it);
+	}
+	for (; it2 != channels.end();){
+		delete *it2;
+		channels.erase(it2);
+	}
+}
 
 /////send stuff back////
 void Server::send_to_server(std::string str, Client &client){

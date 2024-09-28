@@ -5,6 +5,8 @@ void Server::Quit(Client &client){
    std::vector<channel *>::iterator it = channels.begin();
     while(it != channels.end()){
         if (is_client_on_channel(client, (**it))){
+            std::string msg = ":" + client.get_nickname() + " QUIT the server";
+		    send_to_all_channel(msg, (**it));
             if ((**it).get_num_of_ops() == 1){
                 if (is_client_op(client, (**it))){
                     if ((**it).get_clients().size() == 1){

@@ -54,6 +54,7 @@ class Server
 		int client_joined();
 		void update_poll_fds(int i);
 		void read_from_client(int i, std::string buffer);
+		void clean_server();
 
 		///////parser/////////
 		void parser_comand(int i, std::string str);
@@ -98,7 +99,8 @@ class Server
 		static void    signal_handler(int signum);
 		static void    ignoreSignal(int signum);
 		void    registerSignal();
-		int check_names(std::string str);
+		int 	check_names(std::string str);
+		int 	check_copy_nick(std::string str);
 };
 
 

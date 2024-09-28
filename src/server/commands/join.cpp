@@ -64,7 +64,7 @@ void Server::Join(Client &client){
 				channels.push_back(tmp);
 				std::pair<Client *, bool> tmp2(&client, true);
 				tmp->add_client(tmp2);
-				send_to_server(":" + client.get_nickname() + " JOIN " + (*it), client);
+				send_to_all_channel(":" + client.get_nickname() + " JOIN " + (*it), *tmp);
 			}
 			else if(channel_already_exists((*it)) == true && is_client_on_channel(client, *return_channel((*it))) == false){
 				channel *tmp = return_channel((*it));

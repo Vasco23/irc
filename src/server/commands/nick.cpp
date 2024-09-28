@@ -10,7 +10,7 @@ void Server::Nick(Client &client){
 		send_to_server(ERR_NOTREGISTERED, client);
 		return;
 	}
-	if (tmp.size() == 2 && tmp.back().compare(client.get_nickname()) == 0){
+	if (tmp.size() == 2 &&  check_copy_nick(tmp.back()) == 1){
 		send_to_server(ERR_NICKNAMEINUSE, client);
 	}
 	else if (tmp.size() == 2){
@@ -46,14 +46,18 @@ void Server::nick_helper(Client &client, std::string str){
 		send_to_all(":" + last_nickname + "!" + client.get_username() + "@" + client.get_ip() + " NICK :" + str);
 	}	
 }
- 
-int Server::check_names(std::string str){
-	std::string::iterator it = str.begin();
+
+int Server::check_copy_nick(std::string str){
 	std::vector<Client *>::iterator it2 = clients.begin();
 	for (; it2 != clients.end(); it2++){
 		if (str == (*it2)->get_nickname())
 			return 1;
 	}
+	return 0;
+}
+ 
+int Server::check_names(std::string str){
+	std::string::iterator it = str.begin();
 	for (; it != str.end(); it++){
 		if (((*it) >= '0' && (*it) <= '9') || ((*it) >= 'a' && (*it) <= 'z') || ((*it) >= 'A' && (*it) <= 'Z'))
 			continue;

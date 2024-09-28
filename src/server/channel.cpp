@@ -10,6 +10,7 @@ channel::channel(std::string _name) : name(_name){
 }
 
 channel::~channel(){
+	delete this;
 }
 
 

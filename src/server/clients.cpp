@@ -14,6 +14,8 @@ Client::Client(sockaddr_in _addr, socklen_t _addr_size, int _fd) : addr(_addr), 
 }
 
 Client::~Client(){
+	delete this;
+	close(this->fd);
 }
 
 Client::Client(const Client &copy){
