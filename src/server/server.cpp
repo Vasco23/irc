@@ -10,7 +10,8 @@ Server::Server(std::string _ip, std::string _pass) : ip(_ip), pass(_pass){
 }
 
 Server::~Server(){
-	delete this;
+	std::cout << "server destructer called!" << std::endl;
+	//delete this;
 }
 
 int Server::create_server(){
@@ -108,7 +109,7 @@ void Server::server_loop(){
 		int poll_count = poll(poll_fds, poll_num , -1);
 		if (poll_count < 0) {
             ////close func here ->
-            exit(EXIT_FAILURE);
+           return;
         }
 		for (int i = 0; i < poll_num; i++) {
             if (poll_fds[i].revents && POLLIN) {
@@ -156,13 +157,11 @@ void Server::find_command(int i){
 void Server::clean_server(){
 	std::vector<Client *>::iterator it = clients.begin();
 	std::vector<channel *>::iterator it2 = channels.begin();
-	for (; it != clients.end();){
+	for (; it != clients.end(); it++){
 		delete *it;
-		clients.erase(it);
 	}
-	for (; it2 != channels.end();){
+	for (; it2 != channels.end(); it2++){
 		delete *it2;
-		channels.erase(it2);
 	}
 }
 
