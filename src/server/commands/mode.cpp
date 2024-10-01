@@ -96,7 +96,10 @@ void Server::Mode_exec(bool set_remove, char flag, std::string parameters, chann
 		channel.set_topic_restric(set_remove);
 	}
 	if (flag == 'k'){
-
+		if (parameters.empty()){
+			send_to_server(ERR_NEEDMOREPARAMS, client);
+			return;
+		}
 		channel.set_pass(parameters);
 	}
 	if (flag == 'o'){

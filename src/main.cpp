@@ -16,10 +16,16 @@ static bool checkInput(std::string input){
 	return false;
 }
 
+static bool checkPass(std::string pass){
+	if (pass.empty())
+		return true;
+	return false;
+}
+
 int main(int ac, char **av){
 	if (ac != 3)
 		return (1);
-	if (!checkInput(av[1]))
+	if (!checkInput(av[1]) || checkPass(av[2]))
 		return (1);
 	Server *server = new Server(av[1], av[2]);
 	server->create_server();

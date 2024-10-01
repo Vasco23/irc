@@ -42,6 +42,10 @@ int Server::create_server(){
 }
 
 int Server::client_joined(){
+	
+	if (clients.size() > 398)
+		return 1;
+
 	sockaddr_in new_client;
 	socklen_t new_client_len = sizeof(new_client);
 	//socklen_t	new_clientSize

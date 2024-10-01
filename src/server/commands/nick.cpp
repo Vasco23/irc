@@ -35,7 +35,8 @@ void Server::nick_helper(Client &client, std::string str){
 		client.set_nickname_seted(true);
 		std::cout << "set valid" << std::endl;
 		if (client.get_username_seted() == true){
-
+			send_to_server(": 001 " + client.get_nickname(), client);
+			send_to_server(":" + client.get_nickname() + "!" + client.get_nickname() + "@LOCALHOST" + " NICK " + client.get_nickname(), client);
 			send_to_server("001 :Welcome to the Internet Relay Network " + client.get_nickname() + "!" + client.get_username() + "@" + this->ip, client);
 			client.set_client_registerd(true);
 		}
