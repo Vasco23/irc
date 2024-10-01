@@ -131,6 +131,8 @@ void Server::server_loop(){
 }
 
 void Server::parser_comand(int i, std::string str){
+	if (str.empty() == true || str == "\n")	
+		return;
 	clients.at(i)->set_parsed_input(str);
 	clients.at(i)->print_parsed_input();
 	find_command(i);
