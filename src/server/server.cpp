@@ -17,12 +17,12 @@ Server::~Server(){
 int Server::create_server(){
 	socket_fd = socket(AF_INET, SOCK_STREAM, 0);
 	int opt = 1;
+	if (socket_fd == -1)
+		return 1;
 	if (setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1){
 		close (socket_fd);
 		return 1;
 	}
-	if (socket_fd == -1)
-		return 1;
 	hint.sin_addr.s_addr = inet_addr("127.0.0.1");
 	hint.sin_family = AF_INET;
 	hint.sin_port = htons(atoi(ip.c_str()));
@@ -37,15 +37,13 @@ int Server::create_server(){
 	server_loop();
 	clean_server();
 	
-	close(socket_fd);
+	// close(socket_fd);
 	return 0;
 }
 
 int Server::client_joined(){
-	
 	if (clients.size() > 398)
 		return 1;
-
 	sockaddr_in new_client;
 	socklen_t new_client_len = sizeof(new_client);
 	//socklen_t	new_clientSize
@@ -217,4 +215,8 @@ bool Server::is_client_on_server(std::string str){
 		}
 	}
 	return false;
+}
+
+int Server::getSockFd(){
+	return socket_fd;
 }

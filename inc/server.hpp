@@ -101,6 +101,7 @@ class Server
 		void    registerSignal();
 		int 	check_names(std::string str);
 		int 	check_copy_nick(std::string str);
+		int getSockFd();
 };
 
 

@@ -29,5 +29,6 @@ int main(int ac, char **av){
 		return (1);
 	Server *server = new Server(av[1], av[2]);
 	server->create_server();
+	close(server->getSockFd());
 	delete server;
 }
