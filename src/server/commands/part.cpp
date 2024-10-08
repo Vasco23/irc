@@ -17,7 +17,6 @@ void Server::delete_channel(channel &del){
 	for (; it != channels.end(); ++it){
 		if ((*it)->get_name() == del.get_name()){
 			delete((*it));
-			std::cout << "NOT SEGV3!\n";
 			channels.erase(it);
 			return;
 		}
@@ -47,9 +46,7 @@ void Server::Part(Client &client){
 			send_to_server("442 :" + client.get_nickname() + " " + (*it) + " :You're not on that channel", client); 
 			return;
 		}
-		std::cout << "NOT SEGV!\n";
 		if(is_client_on_channel(client, *tmp_channel) == true){
-			std::cout << "NOT SEGV2!\n";
 			std::string msg = ":" + client.get_nickname() + " PART " + (*it) + " :" + reasons(tmp, 2);
 			send_to_all_channel(msg, *tmp_channel);
 			tmp_channel->remove_client(&client);

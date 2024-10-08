@@ -8,7 +8,7 @@ void Server::Topic(Client &client){
 	if (is_channel((*it)) && channel_already_exists((*it))){
 		channel *tmp_channel = return_channel((*it)); 
 		it++;
-		if (tmp_channel->get_topic_restric() == true && is_client_op(client, *tmp_channel)){
+		if (tmp_channel->get_topic_restric() == true && is_client_op(client, *tmp_channel) == false){
 			send_to_server("482 :" + tmp_channel->get_name() + " :You're not a channel operator!" , client);
 			return;
 		}

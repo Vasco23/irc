@@ -188,7 +188,6 @@ void Client::print_parsed_input(){
 	std::vector<std::string>::iterator it2;
 
 	for (it = parsed_input.begin(); it != parsed_input.end(); it++){
-		std::cout << "//////////////////" << std::endl;
 		for(it2 = (*it).begin(); it2 != (*it).end(); it2++){
 			std::cout << (*it2) << " ";
 		}

@@ -116,9 +116,7 @@ void Server::server_loop(){
 		for (int i = 0; i < poll_num; i++) {
             if (poll_fds[i].revents && POLLIN) {
                 if (poll_fds[i].fd == socket_fd) {
-					std::cout << "///////// ENTREI AQUI FDS\n";
                     if (client_joined() == 0){
-						std::cout << "111111111111111111111\n";
 					}
                 } 
 				else {
@@ -136,7 +134,7 @@ void Server::parser_comand(int i, std::string str){
 	if (str.empty() == true || str == "\n")	
 		return;
 	clients.at(i)->set_parsed_input(str);
-	clients.at(i)->print_parsed_input();
+	//clients.at(i)->print_parsed_input();
 	find_command(i);
 }
 
@@ -191,7 +189,7 @@ void Server::send_to_all_channel(std::string str, channel &channel){
 	std::vector<std::pair<Client *, bool> >tmp = channel.get_clients();
 	std::vector<std::pair<Client *, bool> >::iterator it = tmp.begin();
 	for (; it != tmp.end(); it++){
-		std::cout << (*it).first->get_fd() << std::endl;
+		//std::cout << (*it).first->get_fd() << std::endl;
 		send_to_server(str, *(*it).first);
 		//send((*it).first->get_fd(), str.c_str(), str.length(), 0);
 	}
@@ -200,7 +198,7 @@ void Server::send_to_all_channel(std::string str, channel &channel){
 void Server::send_to_all(std::string str){
 	std::vector<Client *>::iterator it = clients.begin();
 	for (; it != clients.end(); it++){
-		std::cout << (*it)->get_fd() << std::endl;
+		//std::cout << (*it)->get_fd() << std::endl;
 		send_to_server(str, *(*it));
 		//send((*it).first->get_fd(), str.c_str(), str.length(), 0);
 	}

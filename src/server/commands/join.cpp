@@ -84,7 +84,6 @@ void Server::Join(Client &client){
 					send_to_server("471 " + tmp->get_name() + " :channel is full!", client);
 			}
 			else if (channel_already_exists((*it)) == true && is_client_on_channel(client, *return_channel((*it))) == true){
-				std::cout << "aqui!!!\n";
 				continue;
 			}
 		}
@@ -98,4 +97,7 @@ void Server::join_helper(Client &client, channel &channel){
 	std::pair<Client *, bool> tmp2(&client, false);
 	channel.add_client(tmp2);
 	send_to_all_channel(":" + client.get_nickname() + " JOIN " + channel.get_name(), channel);
+	if (channel.get_topic().empty() == false){
+		send_to_all_channel(": TOPIC " + channel.get_name() + " :" + channel.get_topic(), channel);
+	}
 }

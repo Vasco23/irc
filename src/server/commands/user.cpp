@@ -11,11 +11,9 @@ void Server::User(Client &client){
 		if (client.get_username_seted() == false){
 			client.set_username(tmp.at(1));
 			client.set_username_seted(true);
-			std::cout << "teste" << std::endl;
 			if (client.get_nickname_seted() == true && client.get_client_registerd() == false){
 				send_to_server("001 :Welcome to the Internet Relay Network" + client.get_nickname() + "!" + client.get_username() + "@" + ip, client);
 				client.set_client_registerd(true);
-				std::cout << "done" << std::endl;
 			}
 		}
 		else

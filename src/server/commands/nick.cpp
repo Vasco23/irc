@@ -6,7 +6,6 @@ void Server::Nick(Client &client){
 	std::vector<std::vector<std::string> >::iterator it = tmp.begin(); */
 	std::vector<std::string> tmp = client.get_parsed_input().front();
 	if (client.get_valid_pass() == false){
-		std::cout << "aqui!!!\n";
 		send_to_server(ERR_NOTREGISTERED, client);
 		return;
 	}
@@ -33,7 +32,6 @@ void Server::nick_helper(Client &client, std::string str){
 	if (client.get_nickname_seted() == false){
 		client.set_nickname(str);
 		client.set_nickname_seted(true);
-		std::cout << "set valid" << std::endl;
 		if (client.get_username_seted() == true){
 			send_to_server(": 001 " + client.get_nickname(), client);
 			send_to_server(":" + client.get_nickname() + "!" + client.get_nickname() + "@LOCALHOST" + " NICK " + client.get_nickname(), client);

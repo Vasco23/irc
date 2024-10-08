@@ -8,15 +8,14 @@ void print_tmp(std::vector<std::string> tmp){
 }
 
 void Server::Mode(Client &client){
-	std::cout << client.get_fd() << "entrei MODE\n";
+	std::cout << client.get_fd() << " entrei MODE\n";
 	std::vector<std::string> tmp = client.get_parsed_input().front();
-	print_tmp(tmp);
+	//print_tmp(tmp);
 	int vector_size = tmp.size();
-	std::cout << "tmp.size = " << vector_size << std::endl;
+	/* std::cout << "tmp.size = " << vector_size << std::endl; */
 	std::vector<std::string>::iterator it = tmp.begin();
 	it++;
 	if (it == tmp.end()){
-		std::cout << "aqui\n";
 		send_to_server(ERR_NEEDMOREPARAMS, client);
 		return;
 	}
@@ -25,7 +24,7 @@ void Server::Mode(Client &client){
 	vector_size--;
 	tmp.erase(tmp.begin());
 	vector_size--;
-	std::cout << "tmp.size = " << vector_size << std::endl;
+	//std::cout << "tmp.size = " << vector_size << std::endl;
 	////wtf size e todo burro
 	if (vector_size == 0){
 		return;
@@ -74,7 +73,7 @@ void Server::Mode_parser(std::vector<std::string> flags, channel &channel, Clien
 		}
 
 	}
-	std::cout << "MODES: " <<modes << std::endl;
+	//std::cout << "MODES: " <<modes << std::endl;
 	send_to_all_channel(":" + client.get_nickname() + " MODE " + channel.get_name() + " " + modes, channel);
 }
 

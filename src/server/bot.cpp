@@ -18,7 +18,7 @@ bool Bot::verifyMessage(std::string message, Client &client, channel &channel, S
 
     while (std::getline(file, line)) {
         if (client.getBadBehavior() > 2 &&  !server.is_client_op(client, channel)) {
-            std::cout << "Kicking user" << std::endl;
+            //std::cout << "Kicking user" << std::endl;
             kickUser(client, channel, server);
             return true;
         }

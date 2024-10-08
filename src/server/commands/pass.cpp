@@ -9,7 +9,6 @@ void Server::Pass(Client &client){
 		std::cout << "invalid pass\n";
 		send_to_server(ERR_ALREADYREGISTERED, client);
 	}
-	std::cout << tmp.size() << " <<<----->>>> " << tmp.back() << std::endl;
 	if (tmp.front().compare("PASS") == 0){
 		if (tmp.size() == 2 && tmp.back().compare(this->pass) == 0){
 			send_to_server(RPL_YOUREOPER, client);
