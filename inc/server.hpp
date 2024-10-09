@@ -41,9 +41,9 @@ class Server
 		static bool running;
 
 		////// events ////////
-		/* std::vector<struct pollfd> poll_fds; */
-		struct pollfd poll_fds[400];
-		int poll_num;
+		std::vector<struct pollfd> poll_fds;
+		//struct pollfd poll_fds[2];
+		//int poll_num;
 		struct pollfd server_pollfd;
 
 	public:
