@@ -11,6 +11,7 @@ void Server::Quit(Client &client){
                 if (is_client_op(client, (**it))){
                     if ((**it).get_clients().size() == 1){
                         (**it).remove_client(&client);
+                        delete *it;
                         channels.erase(it);
                         continue;
                     }
@@ -28,8 +29,9 @@ void Server::Quit(Client &client){
     while(it2 != clients.end()){
         if (client.get_fd() == (*it2)->get_fd()){
 		    update_poll_fds(client.get_fd());
-            clients.erase(it2);
             close((*it2)->get_fd());
+            delete *it2;
+            clients.erase(it2);
         }
         else{
             it2++;

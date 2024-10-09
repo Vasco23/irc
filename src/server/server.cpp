@@ -107,21 +107,25 @@ void Server::server_loop(){
     server_pollfd.events = POLLIN; 
     poll_fds.push_back(server_pollfd);
 	while (server_on){
+		//for (size_t i = 0; i < poll_fds.size(); i++) {
+		//	std::cout << "checking " << poll_fds[i].fd << " as POLL ";
+		//	if (poll_fds[i].events & POLLOUT)
+		//		std::cout << "OUT" << std::endl;
+		//	else
+		//		std::cout << "IN" << std::endl;
+		//}
+
 		int poll_count = poll(poll_fds.data(), poll_fds.size() , -1);
 		if (poll_count < 0) {
             ////close func here ->
            return;
         }
 		for (size_t i = 0; i < poll_fds.size(); i++) {
-            if (poll_fds[i].revents && POLLIN) {
+            if (poll_fds[i].revents & POLLIN) {
                 if (poll_fds[i].fd == socket_fd) {
-<<<<<<< HEAD
-                    if (client_joined() == 0){
-=======
 					std::cout << "///////// ENTREI AQUI FDS\n";
                     if (client_joined() == 1){
 						continue;
->>>>>>> origin/main
 					}
 					// else {
 					// 	if (clients.size() == 2) {
@@ -137,12 +141,14 @@ void Server::server_loop(){
 					std::cout << "buffer: " << std::string(buffer) << std::endl << std::endl << std::endl;
 					if (valread > 0)
 						read_from_client(i, buffer);
+					else if (valread == 0)
+						Quit(*clients.at(i - 1));
                 }
             }
-			else if (poll_fds[i].revents && POLL_OUT){
-				if (poll_fds[i].fd == socket_fd) {
-					clients.at(i)->flush();
-				}
+			else if (poll_fds[i].revents & POLLOUT){
+				if (clients.at(i - 1)->flush())
+					poll_fds[i].events = POLLIN;
+				//std::cout << "setting " << poll_fds[i].fd << " to input" << std::endl;
 			}
         }
     }
@@ -169,7 +175,15 @@ void Server::find_command(int i){
 				(this->*(func[j]))(*tmp);
 			j++;
 		}
-		tmp->update_parsed_input();
+		bool exists = false;
+		for (size_t i = 0; i < clients.size(); i++) {
+			if (clients[i] == tmp) {
+				exists = true;
+				break;
+			}
+		}
+		if (exists)
+			tmp->update_parsed_input();
 		j = 0;
 	}
 }
@@ -187,9 +201,17 @@ void Server::clean_server(){
 
 /////send stuff back////
 void Server::send_to_server(std::string str, Client &client){
+	std::vector<struct pollfd>::iterator it =  poll_fds.begin();
 	str += "\r\n";
 	//send(client.get_fd(), str.c_str(), str.length(), 0);
 	client.set_output(str);
+	//std::cout << "setting " << client.get_fd() << " to output" << std::endl;
+	for(; it != poll_fds.end(); ++it){
+		if ((*it).fd == client.get_fd()){
+			(*it).events = POLLOUT;
+			return;
+		}
+	}
 }
 
 void Server::send_to_channel(std::string str, Client &client, channel &channel){

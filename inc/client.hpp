@@ -15,6 +15,7 @@ class Client
 		std::string username;
 		std::string	realname;
 		std::string input;
+		std::string output;
 		std::vector<std::vector<std::string> > parsed_input;
 		std::string ip;
 		bool		valid_pass;
@@ -41,6 +42,7 @@ class Client
 		std::string get_username();
 		std::string get_realname();
 		std::string get_input();
+		std::string get_output();
 		std::string get_ip();
 		void incrementBadBehavior();
 		int getBadBehavior();
@@ -54,6 +56,7 @@ class Client
 		void set_valid_pass(bool set);
 		void set_nickname_seted(bool set);
 		void set_username_seted(bool set);
+		void set_output(std::string output);
 		void set_nickname(std::string nick);
 		void set_username(std::string user);
 		void set_realname(std::string real);
@@ -65,6 +68,8 @@ class Client
 
 		////////////update_parsed_input//////////////
 		void update_parsed_input();
+		void clear_output();
+		bool flush();
 
 };
 

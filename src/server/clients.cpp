@@ -83,6 +83,10 @@ std::string Client::get_input(){
 	return this->input;
 }
 
+std::string Client::get_output(){
+	return this->output;
+}
+
 std::string Client::get_ip(){
 	return this->ip;
 }
@@ -177,6 +181,10 @@ void Client::set_input(std::string _input){
 	this->input += _input;
 }
 
+void Client::set_output(std::string _output){
+	this->output += _output;
+}
+
 void Client::incrementBadBehavior(){
 	this->badBehavior++;
 }
@@ -199,3 +207,13 @@ void Client::update_parsed_input(){
 	this->parsed_input.erase(parsed_input.begin());
 }
 
+void Client::clear_output(){
+	this->output.clear();
+}
+
+bool Client::flush(){
+	long sent = send(this->fd, output.c_str(), output.size(), 0);
+	if (sent <= 0) return true;
+	output = output.substr(sent);
+	return output.empty();
+}
