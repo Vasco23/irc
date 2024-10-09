@@ -7,6 +7,7 @@ channel::channel(std::string _name) : name(_name){
 	user_limit = 0;
 	invite_only = false;
 	topic_restric = false;
+	password = "";
 }
 
 channel::~channel(){

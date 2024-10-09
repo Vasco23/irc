@@ -115,13 +115,9 @@ void Server::server_loop(){
 		for (size_t i = 0; i < poll_fds.size(); i++) {
             if (poll_fds[i].revents && POLLIN) {
                 if (poll_fds[i].fd == socket_fd) {
-<<<<<<< HEAD
-                    if (client_joined() == 0){
-=======
 					std::cout << "///////// ENTREI AQUI FDS\n";
                     if (client_joined() == 1){
 						continue;
->>>>>>> origin/main
 					}
 					// else {
 					// 	if (clients.size() == 2) {
@@ -139,11 +135,11 @@ void Server::server_loop(){
 						read_from_client(i, buffer);
                 }
             }
-			else if (poll_fds[i].revents && POLL_OUT){
-				if (poll_fds[i].fd == socket_fd) {
-					clients.at(i)->flush();
-				}
-			}
+			// else if (poll_fds[i].revents && POLL_OUT){
+			// 	if (poll_fds[i].fd == socket_fd) {
+			// 		// clients.at(i)->flush();
+			// 	}
+			// }
         }
     }
 }
@@ -188,8 +184,8 @@ void Server::clean_server(){
 /////send stuff back////
 void Server::send_to_server(std::string str, Client &client){
 	str += "\r\n";
-	//send(client.get_fd(), str.c_str(), str.length(), 0);
-	client.set_output(str);
+	send(client.get_fd(), str.c_str(), str.length(), 0);
+	// client.set_output(str);
 }
 
 void Server::send_to_channel(std::string str, Client &client, channel &channel){

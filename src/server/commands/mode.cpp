@@ -36,45 +36,66 @@ void Server::Mode(Client &client){
 void Server::Mode_parser(std::vector<std::string> flags, channel &channel, Client &client){
 	std::vector<std::string>::iterator it = flags.begin();
 	std::string::iterator it_string;
-	std::string modes = "";
+	std::string arg = "";
 	bool set_remove;
-	for (; it != flags.end(); it++){
-		std::cout << "it: " <<(*it) << std::endl;
-		modes.append((*it));
-		it_string = (*it).begin();
-		if ((*it_string) == '+')
-				set_remove = true;
-		else if((*it_string) == '-')
-			set_remove = false;
-		else{
-			send_to_server(ERR_NEEDMOREPARAMS, client);
-			return;
-		}
-		it_string++;
-		if (it_string == (*it).end()){
-			send_to_server(ERR_NEEDMOREPARAMS, client);
-			return;
-		}
-		for (; it_string != (*it).end(); it_string++){
-			if ((*it_string) == 'i' || (*it_string) == 't'){
-				Mode_exec(set_remove, (*it_string), "", channel, client);
-			}
-			else if (((*it_string) == 'o' || (*it_string) == 'l' || (*it_string) == 'k')){
-				it++;
-				if (it == flags.end()){
-					send_to_server(ERR_NEEDMOREPARAMS, client);
-					return;
-				}
-				else{
-					modes.append((*it));
-					Mode_exec(set_remove, (*it_string), (*it), channel, client);
-				}
-			}
-		}
 
+	// std::cout << "meu teste -> " << *it << std::endl;
+	// it++;
+	// std::cout << "meu teste -> " << *it << std::endl;
+
+	// for (; it != flags.end(); it++){
+	// 	std::cout << "it: " <<(*it) << std::endl;
+	// 	modes.append((*it));
+	// 	it_string = (*it).begin();
+	// 	if ((*it_string) == '+')
+	// 			set_remove = true;
+	// 	else if((*it_string) == '-')
+	// 		set_remove = false;
+	// 	else{
+	// 		send_to_server(ERR_NEEDMOREPARAMS, client);
+	// 		return;
+	// 	}
+	// 	it_string++;
+	// 	if (it_string == (*it).end()){
+	// 		send_to_server(ERR_NEEDMOREPARAMS, client);
+	// 		return;
+	// 	}
+	// 	for (; it_string != (*it).end(); it_string++){
+	// 		if ((*it_string) == 'i' || (*it_string) == 't'){
+	// 			Mode_exec(set_remove, (*it_string), "", channel, client);
+	// 		}
+	// 		else if (((*it_string) == 'o' || (*it_string) == 'l' || (*it_string) == 'k')){
+	// 			it++;
+	// 			if (it == flags.end()){
+	// 				send_to_server(ERR_NEEDMOREPARAMS, client);
+	// 				return;
+	// 			}
+	// 			else{
+	// 				modes.append((*it));
+	// 				Mode_exec(set_remove, (*it_string), (*it), channel, client);
+	// 			}
+	// 		}
+	// 	}
+
+	// }
+
+	if ((*it).size() != 2 || ((*it)[0] != '+' && (*it)[0] != '-') || ((*it)[1] != 'i' && (*it)[1] != 't' && (*it)[1] != 'o' && (*it)[1] != 'l' && (*it)[1] != 'k')){
+		send_to_server(ERR_NEEDMOREPARAMS, client);
+		return;
 	}
+	char flag = (*it)[1];
+	std::string modes = *it; 
+	if ((*it)[0] == '+')
+		set_remove = true;
+	else
+		set_remove = false;
+	if (++it != flags.end()){
+		arg = *it;
+	}	
+	Mode_exec(set_remove, flag, arg, channel, client);
 	//std::cout << "MODES: " <<modes << std::endl;
-	send_to_all_channel(":" + client.get_nickname() + " MODE " + channel.get_name() + " " + modes, channel);
+	
+	send_to_all_channel(":" + client.get_nickname() + " MODE " + channel.get_name() + " " + modes + " " + arg, channel);
 }
 
 int get_num(std::string str){
@@ -99,7 +120,11 @@ void Server::Mode_exec(bool set_remove, char flag, std::string parameters, chann
 			send_to_server(ERR_NEEDMOREPARAMS, client);
 			return;
 		}
-		channel.set_pass(parameters);
+		if (set_remove == false){
+			channel.set_pass("");
+		}
+		else
+			channel.set_pass(parameters);
 	}
 	if (flag == 'o'){
 		Client *tmp_client = return_client(parameters);
@@ -117,7 +142,7 @@ void Server::Mode_exec(bool set_remove, char flag, std::string parameters, chann
 		std::string tmp = "l";
 		if (set_remove == true){
 			int limit = get_num(parameters);
-			if (limit < 0 || limit > 9999){
+			if (limit < 1 || limit > 9999){
 				std::string msg = "472 " + static_cast<std::string>(&flag);
 				send_to_server(msg + " :Thats a stupid parameter right there!", client);
 			}

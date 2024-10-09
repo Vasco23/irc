@@ -15,6 +15,7 @@ class Client
 		std::string username;
 		std::string	realname;
 		std::string input;
+		std::string output;
 		std::vector<std::vector<std::string> > parsed_input;
 		std::string ip;
 		bool		valid_pass;
