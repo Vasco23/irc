@@ -9,7 +9,7 @@ Server::Server(std::string _ip, std::string _pass) : ip(_ip), pass(_pass){
 }
 
 Server::~Server(){
-	std::cout << "server destructer called!" << std::endl;
+	// std::cout << "server destructer called!" << std::endl;
 	//delete this;
 }
 
@@ -123,7 +123,6 @@ void Server::server_loop(){
 		for (size_t i = 0; i < poll_fds.size(); i++) {
             if (poll_fds[i].revents & POLLIN) {
                 if (poll_fds[i].fd == socket_fd) {
-					std::cout << "///////// ENTREI AQUI FDS\n";
                     if (client_joined() == 1){
 						continue;
 					}
@@ -135,10 +134,10 @@ void Server::server_loop(){
 					// }
                 } 
 				else {
-					char buffer[1024] = {0};
+					char buffer[1025] = {0};
 					int valread = recv(poll_fds[i].fd, buffer, 1024, 0);
-					std::cout << "valread: " << valread << std::endl;
-					std::cout << "buffer: " << std::string(buffer) << std::endl << std::endl << std::endl;
+					// std::cout << "valread: " << valread << std::endl;
+					// std::cout << "buffer: " << std::string(buffer) << std::endl << std::endl << std::endl;
 					if (valread > 0)
 						read_from_client(i, buffer);
 					else if (valread == 0)
@@ -165,12 +164,12 @@ void Server::parser_comand(int i, std::string str){
 void Server::find_command(int i){
 	int j = 0;
 	Client *tmp = clients.at(i);
-	std::string commads[12] = {"PASS", "NICK", "USER", "JOIN", "PART", "PRIVMSG", "TOPIC", "KICK", "INVITE", "MODE", "QUIT", "WHO"};
-	f func[12] = {&Server::Pass, &Server::Nick, &Server::User, &Server::Join, &Server::Part, &Server::Privmsg, &Server::Topic, &Server::Kick, &Server::Invite, &Server::Mode, &Server::Quit, &Server::Who};
+	std::string commads[11] = {"PASS", "NICK", "USER", "JOIN", "PART", "PRIVMSG", "TOPIC", "KICK", "INVITE", "MODE", "QUIT"};
+	f func[11] = {&Server::Pass, &Server::Nick, &Server::User, &Server::Join, &Server::Part, &Server::Privmsg, &Server::Topic, &Server::Kick, &Server::Invite, &Server::Mode, &Server::Quit};
 	std::vector<std::vector<std::string> > copy = clients.at(i)->get_parsed_input();
 	std::vector<std::vector<std::string> >::iterator it = copy.begin();
 	for (; it != copy.end(); it++){
-		while (j < 12){
+		while (j < 11){
 			if ((*it).front().compare(commads[j]) == 0)
 				(this->*(func[j]))(*tmp);
 			j++;
@@ -203,10 +202,6 @@ void Server::clean_server(){
 void Server::send_to_server(std::string str, Client &client){
 	std::vector<struct pollfd>::iterator it =  poll_fds.begin();
 	str += "\r\n";
-<<<<<<< HEAD
-	send(client.get_fd(), str.c_str(), str.length(), 0);
-	// client.set_output(str);
-=======
 	//send(client.get_fd(), str.c_str(), str.length(), 0);
 	client.set_output(str);
 	//std::cout << "setting " << client.get_fd() << " to output" << std::endl;
@@ -216,7 +211,6 @@ void Server::send_to_server(std::string str, Client &client){
 			return;
 		}
 	}
->>>>>>> origin/Vasco
 }
 
 void Server::send_to_channel(std::string str, Client &client, channel &channel){

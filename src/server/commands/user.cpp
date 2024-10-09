@@ -1,7 +1,7 @@
 #include "../inc/client.hpp"
 
 void Server::User(Client &client){
-	std::cout << client.get_fd() << " entrei no User\n";
+	// std::cout << client.get_fd() << " entrei no User\n";
 	std::vector<std::string> tmp = client.get_parsed_input().front();
 	if (client.get_valid_pass() == false){
 		send_to_server(ERR_NOTREGISTERED, client);

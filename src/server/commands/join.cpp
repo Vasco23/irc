@@ -57,52 +57,65 @@ void Server::Join(Client &client){
 		return;
 	}
 	it++;
-	std::cout << "----------------->>>>>>>>>>" << (*it) << std::endl;
-	if (is_channel((*it)) == true){
-		if (channel_already_exists((*it)) == false){
-			channel *tmp = new channel((*it));
-			channels.push_back(tmp);
-			std::pair<Client *, bool> tmp2(&client, true);
-			tmp->add_client(tmp2);
-			send_to_all_channel(":" + client.get_nickname() + " JOIN " + (*it), *tmp);
-		}
-		else if(channel_already_exists((*it)) == true && is_client_on_channel(client, *return_channel((*it))) == false){
-			channel *tmp = return_channel((*it));
-			if (tmp->get_invite_only() == true && tmp->is_client_invited(client.get_fd()) == false){
-				send_to_server("473 " + client.get_nickname() + " " + tmp->get_name() + " :Cannot join channel (+i)\r\n", client);
-				return;
+	std::string name = (*it);
+	// std::string pass = (tmp.size() >= 2)  ? *(it + 1) : "";
+	// std::cout << "name: " << name << " pass: " << pass << std::endl;
+	if (is_channel(name) == true){
+		std::cout << "entrei no is_channel\n";
+			if (channel_already_exists(name) == false){
+				std::cout << "entrei no channel_already_exists\n";
+				channel *tmp = new channel(name);
+				channels.push_back(tmp);
+				std::pair<Client *, bool> tmp2(&client, true);
+				tmp->add_client(tmp2);
+				send_to_all_channel(":" + client.get_nickname() + " JOIN " + (*it), *tmp);
 			}
-			if (tmp->get_user_limit() == 0 || (tmp->get_user_limit() > (int)tmp->get_clients().size()))
-				join_helper(client, *tmp);
-			else if (tmp->get_user_limit() != 0 && (tmp->get_user_limit() > (int)tmp->get_clients().size())){
-				if (tmp->is_client_invited(client.get_fd()) == true){
-					tmp->remove_invited_fd(client.get_fd());
-					join_helper(client, *tmp);
+			else if(is_client_on_channel(client, *return_channel(name)) == false){
+				std::cout << "entrei no is_client_on_channel\n";
+				channel *tmp = return_channel(name);
+				if (tmp->get_invite_only() == true && tmp->is_client_invited(client.get_fd()) == false){
+					std::cout << "entrei no invite_only\n";
+					send_to_server("473 " + client.get_nickname() + " " + tmp->get_name() + " :Cannot join channel (+i)\r\n", client);
 					return;
 				}
+				std::cout << "entrei =============\n";
+				if (tmp->get_user_limit() == 0 || (tmp->get_user_limit() > (int)tmp->get_clients().size()))
+				{	
+						std::cout << "entrei no join_helper 1\n";
+					join_helper(client, *tmp);
+					}
+				else if (tmp->get_user_limit() != 0 && (tmp->get_user_limit() > (int)tmp->get_clients().size())){
+						std::cout << "entrei no join_helper 2\n";
+					if (tmp->is_client_invited(client.get_fd()) == true){
+						tmp->remove_invited_fd(client.get_fd());
+						join_helper(client, *tmp);
+					}
+				}
+				else
+					send_to_server("471 " + tmp->get_name() + " :channel is full!", client);
 			}
-			else
-				send_to_server("471 " + tmp->get_name() + " :channel is full!", client);
 		}
-	}
 	else{
 		send_to_server(ERR_NOSUCHCHANNEL, client);
 	}
+	
 }
 
 void Server::join_helper(Client &client, channel &channel){
 	std::pair<Client *, bool> tmp2(&client, false);
-	channel.add_client(tmp2);
 	if (channel.get_pass().empty() == false){
 		std::vector<std::vector<std::string> > input = client.get_parsed_input();
 		if (input[0].size() == 3 && input[0][2] == channel.get_pass()){
+			channel.add_client(tmp2);
 			send_to_all_channel(":" + client.get_nickname() + " JOIN " + channel.get_name(), channel);
+			return;
 		}
 		else{
 			send_to_server("475 :" + channel.get_name() + " :Cannot join channel (+k)\r\n", client);
 			return;
 		}
 	}
+	channel.add_client(tmp2);
 	send_to_all_channel(":" + client.get_nickname() + " JOIN " + channel.get_name(), channel);
 	if (channel.get_topic().empty() == false){
 		send_to_all_channel(": TOPIC " + channel.get_name() + " :" + channel.get_topic(), channel);

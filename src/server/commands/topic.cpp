@@ -1,7 +1,7 @@
 #include "../inc/client.hpp"
 
 void Server::Topic(Client &client){
-	std::cout << client.get_fd() << "entrei TOPIC\n";
+	// std::cout << client.get_fd() << "entrei TOPIC\n";
 	std::vector<std::string> tmp = client.get_parsed_input().front();
 	std::vector<std::string>::iterator it = tmp.begin();
 	it++;

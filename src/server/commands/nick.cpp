@@ -1,7 +1,7 @@
 #include "../inc/client.hpp"
 
 void Server::Nick(Client &client){
-	std::cout << client.get_fd() << " entrei no Nick\n";
+	// std::cout << client.get_fd() << " entrei no Nick\n";
 	/* std::vector<std::vector<std::string> > tmp = client.get_parsed_input();
 	std::vector<std::vector<std::string> >::iterator it = tmp.begin(); */
 	std::vector<std::string> tmp = client.get_parsed_input().front();

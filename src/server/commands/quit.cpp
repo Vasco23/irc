@@ -1,7 +1,7 @@
 #include "../inc/client.hpp"
 
 void Server::Quit(Client &client){
-    std::cout << client.get_fd() << " entrei QUIT\n";
+    // std::cout << client.get_fd() << " entrei QUIT\n";
    std::vector<channel *>::iterator it = channels.begin();
     while(it != channels.end()){
         if (is_client_on_channel(client, (**it))){

@@ -78,7 +78,10 @@ void Server::Mode_parser(std::vector<std::string> flags, channel &channel, Clien
 	// 	}
 
 	// }
-
+	if (is_client_op(client, channel) == false){
+		send_to_server("482 " + channel.get_name() + " :You're not a channel operator!", client);
+		return;
+	}
 	if ((*it).size() != 2 || ((*it)[0] != '+' && (*it)[0] != '-') || ((*it)[1] != 'i' && (*it)[1] != 't' && (*it)[1] != 'o' && (*it)[1] != 'l' && (*it)[1] != 'k')){
 		send_to_server(ERR_NEEDMOREPARAMS, client);
 		return;

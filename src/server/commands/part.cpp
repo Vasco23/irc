@@ -36,7 +36,7 @@ bool Server::is_client_op(Client &client, channel &channel){
 }
 
 void Server::Part(Client &client){
-	std::cout << client.get_fd() << " entrei no Part\n";
+	// std::cout << client.get_fd() << " entrei no Part\n";
 	std::vector<std::string> tmp = client.get_parsed_input().front();
 	std::vector<std::string>::iterator it = tmp.begin();
 	it++;

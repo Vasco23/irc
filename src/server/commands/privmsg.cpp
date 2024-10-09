@@ -14,7 +14,7 @@ Client* Server::return_client(std::string str){
 */
 
 void Server::Privmsg(Client &client){
-	std::cout << client.get_fd() << "entrei PRIVMSG\n";
+	// std::cout << client.get_fd() << "entrei PRIVMSG\n";
 	std::vector<std::string> tmp = client.get_parsed_input().front();
 	std::vector<std::string>::iterator it = tmp.begin();
 	Bot bot;
