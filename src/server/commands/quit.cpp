@@ -27,9 +27,9 @@ void Server::Quit(Client &client){
     int i = 1;
     while(it2 != clients.end()){
         if (client.get_fd() == (*it2)->get_fd()){
+		    update_poll_fds(client.get_fd());
             clients.erase(it2);
             close((*it2)->get_fd());
-		    update_poll_fds(i);
         }
         else{
             it2++;

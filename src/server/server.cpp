@@ -5,7 +5,6 @@
 bool server_on = true;
 
 Server::Server(std::string _ip, std::string _pass) : ip(_ip), pass(_pass){
-	poll_num = 0;
 
 }
 
@@ -42,8 +41,6 @@ int Server::create_server(){
 }
 
 int Server::client_joined(){
-	if (clients.size() > 398)
-		return 1;
 	sockaddr_in new_client;
 	socklen_t new_client_len = sizeof(new_client);
 	//socklen_t	new_clientSize
@@ -57,16 +54,19 @@ int Server::client_joined(){
 	tmp->set_ip(inet_ntoa(new_client.sin_addr));
 	client_pollfd.events = POLLIN;
 	client_pollfd.revents = 0;
-	poll_fds[poll_num] = client_pollfd;
-	poll_num++;
+	poll_fds.push_back(client_pollfd);
+	// poll_fds[poll_num] = client_pollfd;
+	// poll_num++;
 	return 0;
 }
 
-void Server::update_poll_fds(int i){
-	for (; i < poll_num - 1; i++){
-		poll_fds[i] = poll_fds[i + 1];
+void Server::update_poll_fds(int fd){
+	for (size_t i = 0; i < poll_fds.size(); i++) {
+		if (poll_fds[i].fd == fd) {
+			poll_fds.erase(poll_fds.begin() + i);
+			break;
+		}
 	}
-	poll_num--;
 }
 
 void Server::read_from_client(int i, std::string buffer){
@@ -105,29 +105,41 @@ void Server::registerSignal(){
 void Server::server_loop(){
 	server_pollfd.fd = socket_fd;
     server_pollfd.events = POLLIN; 
-    poll_fds[poll_num] = server_pollfd;
-	poll_num++;
+    poll_fds.push_back(server_pollfd);
 	while (server_on){
-		int poll_count = poll(poll_fds, poll_num , -1);
+		int poll_count = poll(poll_fds.data(), poll_fds.size() , -1);
 		if (poll_count < 0) {
             ////close func here ->
            return;
         }
-		for (int i = 0; i < poll_num; i++) {
+		for (size_t i = 0; i < poll_fds.size(); i++) {
             if (poll_fds[i].revents && POLLIN) {
                 if (poll_fds[i].fd == socket_fd) {
 					std::cout << "///////// ENTREI AQUI FDS\n";
-                    if (client_joined() == 0){
-						std::cout << "111111111111111111111\n";
+                    if (client_joined() == 1){
+						continue;
 					}
+					// else {
+					// 	if (clients.size() == 2) {
+					// 		send_to_server("005 :", *clients.at(clients.size() - 1));
+					// 		Quit(*clients.at(clients.size() - 1));
+					// 	}
+					// }
                 } 
 				else {
 					char buffer[1024] = {0};
 					int valread = recv(poll_fds[i].fd, buffer, 1024, 0);
+					std::cout << "valread: " << valread << std::endl;
+					std::cout << "buffer: " << std::string(buffer) << std::endl << std::endl << std::endl;
 					if (valread > 0)
 						read_from_client(i, buffer);
                 }
             }
+			else if (poll_fds[i].revents && POLL_OUT){
+				if (poll_fds[i].fd == socket_fd) {
+					clients.at(i)->flush();
+				}
+			}
         }
     }
 }
@@ -172,7 +184,8 @@ void Server::clean_server(){
 /////send stuff back////
 void Server::send_to_server(std::string str, Client &client){
 	str += "\r\n";
-	send(client.get_fd(), str.c_str(), str.length(), 0);
+	//send(client.get_fd(), str.c_str(), str.length(), 0);
+	client.set_output(str);
 }
 
 void Server::send_to_channel(std::string str, Client &client, channel &channel){
