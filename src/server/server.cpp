@@ -226,6 +226,10 @@ void Server::send_to_channel(std::string str, Client &client, channel &channel){
 }
 
 void Server::send_to_all_channel(std::string str, channel &channel){
+	if (channels.size() == 0){
+		std::cout << "channel vazio alert \n";
+		return;
+	}
 	std::vector<std::pair<Client *, bool> >tmp = channel.get_clients();
 	std::vector<std::pair<Client *, bool> >::iterator it = tmp.begin();
 	for (; it != tmp.end(); it++){

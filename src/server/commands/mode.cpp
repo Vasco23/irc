@@ -139,7 +139,7 @@ void Server::Mode_exec(bool set_remove, char flag, std::string parameters, chann
 			send_to_server("441 :" + tmp_client->get_nickname() + " " + channel.get_name() + " :is not on the channel!" , client);
 			return;
 		}
-		channel.set_remove_op(client.get_fd(), set_remove);
+		channel.set_remove_op(tmp_client->get_fd(), set_remove);
 	}
 	if (flag == 'l'){
 		std::string tmp = "l";

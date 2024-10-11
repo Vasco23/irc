@@ -14,10 +14,11 @@ std::string Server::reasons(std::vector<std::string> tmp, int i){
 
 void Server::delete_channel(channel &del){
 	std::vector<channel *>::iterator it = channels.begin();
-	for (; it != channels.end(); ++it){
+	for (; it != channels.end(); it++){
 		if ((*it)->get_name() == del.get_name()){
 			delete((*it));
 			channels.erase(it);
+			std::cout << "deleto o canal" << std::endl;
 			return;
 		}
 	}
@@ -28,8 +29,9 @@ bool Server::is_client_op(Client &client, channel &channel){
 	std::vector<std::pair<Client *, bool> >::iterator it = tmp.begin();
 	for (; it != tmp.end(); it++){
 		if (client.get_fd() ==  (*it).first->get_fd()){
-			if ((*it).second == true)
+			if ((*it).second == true){
 				return true;
+			}
 		}
 	}
 	return false;
@@ -41,6 +43,7 @@ void Server::Part(Client &client){
 	std::vector<std::string>::iterator it = tmp.begin();
 	it++;
 	if ((is_channel(*it)) == true){
+		std::cout << "part function" << std::endl;
 		channel *tmp_channel = return_channel((*it));
 		if (tmp_channel == NULL){
 			send_to_server("442 :" + client.get_nickname() + " " + (*it) + " :You're not on that channel", client); 
@@ -52,7 +55,7 @@ void Server::Part(Client &client){
 			tmp_channel->remove_client(&client);
 			if (is_client_op(client, *tmp_channel) == true && tmp_channel->get_num_of_ops() == 1){
 				//last op in channel
-				if (return_channel((*it))->get_clients().size() == 1){
+				if (return_channel((*it))->get_clients().size() == 0){
 					//last client delete channel;
 					delete_channel(*tmp_channel);
 				}
@@ -60,6 +63,10 @@ void Server::Part(Client &client){
 					//give op to other client on the channel
 					tmp_channel->get_clients().front().second = true;
 				}
+			}
+			else if (return_channel((*it))->get_clients().size() == 0){
+					//last client delete channel;
+					delete_channel(*tmp_channel);
 			}
 		}
 		else{

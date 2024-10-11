@@ -126,14 +126,9 @@ bool channel::is_client_invited(int fd){
 }
 
 void channel::set_remove_op(int fd, bool set_remove){
-	std::vector<std::pair<Client *, bool> >::iterator it = clients.begin();
-	for (; it != clients.end(); it++){
-		if ((*it).first->get_fd() == fd){
-			if (set_remove == true)
-				(*it).second = true;
-			else
-				(*it).second = false;
-			return;
+	for(size_t i = 0; i < this->clients.size(); i++){
+		if (fd == this->clients[i].first->get_fd()){
+				this->clients[i].second = set_remove;
 		}
 	}
 }
