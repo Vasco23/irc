@@ -40,7 +40,7 @@ bool Server::is_client_on_channel(Client &client, channel &channel){
 	std::vector<std::pair<Client *, bool> >tmp = channel.get_clients();
 	std::vector<std::pair<Client *, bool> >::iterator it = tmp.begin();
 	for (; it != tmp.end(); it++){
-		std::cout << client.get_fd() << "  =  " << (*it).first->get_fd() << std::endl;
+		std::cout << client.get_fd() << "  =  " << std::endl;
 		if (client.get_fd() == (*it).first->get_fd()){
 			std::cout << "space" << std::endl;
 			return true;

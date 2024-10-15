@@ -19,6 +19,7 @@ void Server::Quit(Client &client){
                     (**it).get_clients().front().second = true;
                 }
             }
+            (**it).remove_client(&client);
         }
         it++;
     }
@@ -29,6 +30,7 @@ void Server::Quit(Client &client){
             close((*it2)->get_fd());
             delete *it2;
             clients.erase(it2);
+            std::cout << " deleted client \n";
             return;
         }
         it2++;
