@@ -24,7 +24,6 @@ void Server::Privmsg(Client &client){
 			channel *tmp_channel = return_channel((*it));
 			if (!tmp_channel)
 				return;
-			std::cout << reasons(tmp, 2) << "kkkk" << std::endl;
 			if (reasons(tmp, 2).empty()){
 				send_to_server(ERR_NEEDMOREPARAMS, client); 
 				return;
@@ -38,7 +37,6 @@ void Server::Privmsg(Client &client){
 				return;
 			if (!tmp_client->get_client_registerd())
 				return;
-			// std::cout << reasons(tmp, 2) << "kkkk" << std::endl;
 			if (reasons(tmp, 2).empty()){
 				send_to_server(ERR_NEEDMOREPARAMS, client); 
 				return;

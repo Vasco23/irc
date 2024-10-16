@@ -8,7 +8,6 @@ void print_tmp(std::vector<std::string> tmp){
 }
 
 void Server::Mode(Client &client){
-	std::cout << client.get_fd() << " entrei MODE\n";
 	std::vector<std::string> tmp = client.get_parsed_input().front();
 	//print_tmp(tmp);
 	int vector_size = tmp.size();
@@ -87,7 +86,7 @@ void Server::Mode_exec(bool set_remove, char flag, std::string parameters, chann
 		channel.set_topic_restric(set_remove);
 	}
 	if (flag == 'k'){
-		if (parameters.empty()){
+		if (set_remove == true && parameters.empty()){
 			send_to_server(ERR_NEEDMOREPARAMS, client);
 			return;
 		}

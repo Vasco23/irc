@@ -40,9 +40,7 @@ bool Server::is_client_on_channel(Client &client, channel &channel){
 	std::vector<std::pair<Client *, bool> >tmp = channel.get_clients();
 	std::vector<std::pair<Client *, bool> >::iterator it = tmp.begin();
 	for (; it != tmp.end(); it++){
-		std::cout << client.get_fd() << "  =  " << std::endl;
 		if (client.get_fd() == (*it).first->get_fd()){
-			std::cout << "space" << std::endl;
 			return true;
 		}
 	}
@@ -52,7 +50,7 @@ bool Server::is_client_on_channel(Client &client, channel &channel){
 
 
 void Server::Join(Client &client){
-	std::cout << client.get_fd() << " entrei no Join\n";
+	// std::cout << client.get_fd() << " entrei no Join\n";
 	std::vector<std::string> tmp = client.get_parsed_input().front();
 	std::vector<std::string>::iterator it = tmp.begin();
 	if (client.get_client_registerd() == false){
@@ -61,12 +59,8 @@ void Server::Join(Client &client){
 	}
 	it++;
 	std::string name = (*it);
-	// std::string pass = (tmp.size() >= 2)  ? *(it + 1) : "";
-	// std::cout << "name: " << name << " pass: " << pass << std::endl;
 	if (is_channel(name) == true){
-		std::cout << "entrei no is_channel\n";
 			if (channel_already_exists(name) == false){
-				std::cout << "entrei no channel_already_exists\n";
 				channel *tmp = new channel(name);
 				channels.push_back(tmp);
 				std::pair<Client *, bool> tmp2(&client, true);
@@ -74,21 +68,16 @@ void Server::Join(Client &client){
 				send_to_all_channel(":" + client.get_nickname() + " JOIN " + (*it), *tmp);
 			}
 			else if(is_client_on_channel(client, *return_channel(name)) == false){
-				std::cout << "entrei no is_client_on_channel\n";
 				channel *tmp = return_channel(name);
 				if (tmp->get_invite_only() == true && tmp->is_client_invited(client.get_fd()) == false){
-					std::cout << "entrei no invite_only\n";
 					send_to_server("473 " + client.get_nickname() + " " + tmp->get_name() + " :Cannot join channel (+i)\r\n", client);
 					return;
 				}
-				std::cout << "entrei =============\n";
 				if (tmp->get_user_limit() == 0 || (tmp->get_user_limit() > (int)tmp->get_clients().size()))
-				{	
-						std::cout << "entrei no join_helper 1\n";
+				{
 					join_helper(client, *tmp);
-					}
+				}
 				else if (tmp->get_user_limit() != 0 && (tmp->get_user_limit() > (int)tmp->get_clients().size())){
-						std::cout << "entrei no join_helper 2\n";
 					if (tmp->is_client_invited(client.get_fd()) == true){
 						tmp->remove_invited_fd(client.get_fd());
 						join_helper(client, *tmp);

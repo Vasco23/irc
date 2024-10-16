@@ -16,10 +16,10 @@ void Server::User(Client &client){
 				client.set_client_registerd(true);
 			}
 		}
-		else
-			send_to_server(ERR_INVALIDUSERNAME, client);
-		if (check_names(tmp.back()) == 0 && tmp.back().size() < 9){
-				client.set_realname(tmp.back());
-		}
+	}
+	else
+		send_to_server(ERR_INVALIDUSERNAME, client);
+	if (check_names(tmp.back()) == 0 && tmp.back().size() < 9){
+			client.set_realname(tmp.back());
 	}
 }

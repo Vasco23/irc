@@ -18,7 +18,7 @@ void Server::delete_channel(channel &del){
 		if ((*it)->get_name() == del.get_name()){
 			delete((*it));
 			channels.erase(it);
-			std::cout << "deleto o canal" << std::endl;
+			// std::cout << "deleto o canal" << std::endl;
 			return;
 		}
 	}
@@ -46,7 +46,6 @@ void Server::Part(Client &client){
 	}
 	it++;
 	if ((is_channel(*it)) == true){
-		std::cout << "part function" << std::endl;
 		channel *tmp_channel = return_channel((*it));
 		if (tmp_channel == NULL){
 			send_to_server("442 :" + client.get_nickname() + " " + (*it) + " :You're not on that channel", client); 
