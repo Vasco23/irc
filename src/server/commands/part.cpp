@@ -41,6 +41,9 @@ void Server::Part(Client &client){
 	// std::cout << client.get_fd() << " entrei no Part\n";
 	std::vector<std::string> tmp = client.get_parsed_input().front();
 	std::vector<std::string>::iterator it = tmp.begin();
+	if(tmp.size() < 2){
+		send_to_server(ERR_NEEDMOREPARAMS, client); return;
+	}
 	it++;
 	if ((is_channel(*it)) == true){
 		std::cout << "part function" << std::endl;

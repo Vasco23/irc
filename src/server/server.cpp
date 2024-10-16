@@ -170,8 +170,14 @@ void Server::find_command(int i){
 	std::vector<std::vector<std::string> >::iterator it = copy.begin();
 	for (; it != copy.end(); it++){
 		while (j < 11){
-			if ((*it).front().compare(commads[j]) == 0)
+			if ((*it).front().compare(commads[j]) == 0){
+				if (tmp->get_client_registerd() == false && j > 2){
+					send_to_server(ERR_NOTREGISTERED, *tmp);
+					j++;
+					continue;
+				}
 				(this->*(func[j]))(*tmp);
+			}
 			j++;
 		}
 		bool exists = false;
@@ -219,7 +225,7 @@ void Server::send_to_channel(std::string str, Client &client, channel &channel){
 	for (; it != tmp.end(); it++){
 		if (client.get_nickname().compare((*it).first->get_nickname()) == 0)
 			continue;
-		else{
+		else if(client.get_client_registerd() == true){
 			send_to_server(str, *(*it).first);
 		}
 	}
@@ -233,17 +239,17 @@ void Server::send_to_all_channel(std::string str, channel &channel){
 	std::vector<std::pair<Client *, bool> >tmp = channel.get_clients();
 	std::vector<std::pair<Client *, bool> >::iterator it = tmp.begin();
 	for (; it != tmp.end(); it++){
-		//std::cout << (*it).first->get_fd() << std::endl;
-		send_to_server(str, *(*it).first);
-		//send((*it).first->get_fd(), str.c_str(), str.length(), 0);
+		if((*it).first->get_client_registerd() == true){
+			send_to_server(str, *(*it).first);
+		}
 	}
 }
 
 void Server::send_to_all(std::string str){
 	std::vector<Client *>::iterator it = clients.begin();
 	for (; it != clients.end(); it++){
-		//std::cout << (*it)->get_fd() << std::endl;
-		send_to_server(str, *(*it));
+		if((*it)->get_client_registerd() == true)
+			send_to_server(str, *(*it));
 		//send((*it).first->get_fd(), str.c_str(), str.length(), 0);
 	}
 }

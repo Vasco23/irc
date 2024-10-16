@@ -20,6 +20,13 @@ void Server::Mode(Client &client){
 		return;
 	}
 	channel *tmp_channel = return_channel((*it));
+	if (!tmp_channel){
+		send_to_server("403 :" + (*it) + ":That channel does not exist!", client);
+		return ;
+	}
+	if (!is_client_on_channel(client, *tmp_channel)){
+		send_to_server("441 :" + client.get_nickname() + " " + tmp_channel->get_name() + " :is not on the channel!" , client);
+	} 
 	tmp.erase(tmp.begin());
 	vector_size--;
 	tmp.erase(tmp.begin());
@@ -39,45 +46,6 @@ void Server::Mode_parser(std::vector<std::string> flags, channel &channel, Clien
 	std::string arg = "";
 	bool set_remove;
 
-	// std::cout << "meu teste -> " << *it << std::endl;
-	// it++;
-	// std::cout << "meu teste -> " << *it << std::endl;
-
-	// for (; it != flags.end(); it++){
-	// 	std::cout << "it: " <<(*it) << std::endl;
-	// 	modes.append((*it));
-	// 	it_string = (*it).begin();
-	// 	if ((*it_string) == '+')
-	// 			set_remove = true;
-	// 	else if((*it_string) == '-')
-	// 		set_remove = false;
-	// 	else{
-	// 		send_to_server(ERR_NEEDMOREPARAMS, client);
-	// 		return;
-	// 	}
-	// 	it_string++;
-	// 	if (it_string == (*it).end()){
-	// 		send_to_server(ERR_NEEDMOREPARAMS, client);
-	// 		return;
-	// 	}
-	// 	for (; it_string != (*it).end(); it_string++){
-	// 		if ((*it_string) == 'i' || (*it_string) == 't'){
-	// 			Mode_exec(set_remove, (*it_string), "", channel, client);
-	// 		}
-	// 		else if (((*it_string) == 'o' || (*it_string) == 'l' || (*it_string) == 'k')){
-	// 			it++;
-	// 			if (it == flags.end()){
-	// 				send_to_server(ERR_NEEDMOREPARAMS, client);
-	// 				return;
-	// 			}
-	// 			else{
-	// 				modes.append((*it));
-	// 				Mode_exec(set_remove, (*it_string), (*it), channel, client);
-	// 			}
-	// 		}
-	// 	}
-
-	// }
 	if (is_client_op(client, channel) == false){
 		send_to_server("482 " + channel.get_name() + " :You're not a channel operator!", client);
 		return;

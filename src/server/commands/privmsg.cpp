@@ -24,6 +24,11 @@ void Server::Privmsg(Client &client){
 			channel *tmp_channel = return_channel((*it));
 			if (!tmp_channel)
 				return;
+			std::cout << reasons(tmp, 2) << "kkkk" << std::endl;
+			if (reasons(tmp, 2).empty()){
+				send_to_server(ERR_NEEDMOREPARAMS, client); 
+				return;
+			}
 			send_to_channel(":" + client.get_nickname() + " PRIVMSG " + (*it) + " " + reasons(tmp, 2), client, *tmp_channel);
 			bot.verifyMessage(reasons(tmp, 2), client, *tmp_channel, *this);
 			}
@@ -31,7 +36,16 @@ void Server::Privmsg(Client &client){
 			Client *tmp_client = return_client((*it));
 			if (!tmp_client)
 				return;
+			if (!tmp_client->get_client_registerd())
+				return;
+			// std::cout << reasons(tmp, 2) << "kkkk" << std::endl;
+			if (reasons(tmp, 2).empty()){
+				send_to_server(ERR_NEEDMOREPARAMS, client); 
+				return;
+			}
 			send_to_server(":" + client.get_nickname() + " PRIVMSG " + (*it) + " " + reasons(tmp, 2), *tmp_client);
 		}
 	}
+	else
+		send_to_server(ERR_NEEDMOREPARAMS, client);
 }
